@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const projectModel = new mongoose.Schema(
+const userModel = new mongoose.Schema(
 
     {
         "id": {
@@ -29,9 +29,13 @@ const projectModel = new mongoose.Schema(
         "password": {
             required: true,
             type: String
-        }
+        },
+        "role": {
+            required: true,
+            type: String,
+        },
     }
 );
 
-const User = mongoose.model('User', projectModel);
+const User = mongoose.model('User', userModel);
 export default User;

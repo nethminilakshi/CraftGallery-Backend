@@ -14,7 +14,28 @@ export const getAllUsers = async (req: Request, res: Response) => {
     }
 }
 
+// export const saveUser = async (req: Request, res: Response) => {
+//     try {
+//         const newUser = req.body;
+//         const validationError = userService.validateUser(newUser);
+//         if (validationError) {
+//             res.status(400).json({
+//                 error: validationError
+//             });
+//             return;
+//         }
+//         const savedUser = await userService.saveUsers(newUser);
+//         res.status(201).json(savedUser);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({
+//             error: 'Something went wrong!'
+//         });
+//     }
+// }
+
 export const saveUser = async (req: Request, res: Response) => {
+
     try {
         const newUser = req.body;
         const validationError = userService.validateUser(newUser);
@@ -22,17 +43,22 @@ export const saveUser = async (req: Request, res: Response) => {
             res.status(400).json({
                 error: validationError
             });
-            return;
+            return
         }
-        const savedUser = await userService.saveUsers(newUser);
-        res.status(201).json(savedUser);
+        const savedUser = await userService.saveUser(newUser)
+        res.status(201).json(savedUser)
+        console.log(savedUser.id)
+
     } catch (error) {
-        console.error(error);
+        console.error(error)
         res.status(500).json({
-            error: 'Something went wrong!'
-        });
+            error: 'Something went wrong'
+        })
     }
+
 }
+
+
 export const updateUser = async (req: Request, res: Response) => {
     const userId = (req.params.id);
     // if (isNaN(projectId)) {

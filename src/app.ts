@@ -3,6 +3,7 @@ import cors from "cors";
 import categoryRoutes from "./routes/category.routes";
 import projectRoutes from "./routes/project.routes";
 import userRoutes from "./routes/user.routes";
+import authRoutes from "./routes/auth.routes";
 
 
 const  app: Express = express();
@@ -21,9 +22,11 @@ const corsOptions = {
     }
 }
 app.use(cors());
-app.use("/api/category", categoryRoutes)
-app.use("/api/project",projectRoutes)
-app.use("/api/user", userRoutes)
+app.use("/api/category", categoryRoutes);
+app.use("/api/project",projectRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/auth",authRoutes );
+
 
 
 
