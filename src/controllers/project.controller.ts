@@ -3,7 +3,6 @@ import * as projectService from '../services/project.service';
 import { EmailService } from '../services/email.service';
 import jwt from 'jsonwebtoken';
 
-// Interface for JWT payload
 interface JwtPayload {
     userId: string;
     username: string;
@@ -11,7 +10,6 @@ interface JwtPayload {
     role: string;
 }
 
-// Helper function to extract user info from token
 const getUserFromToken = (req: Request): JwtPayload | null => {
     try {
         const token = req.headers.authorization?.replace('Bearer ', '');
@@ -20,7 +18,6 @@ const getUserFromToken = (req: Request): JwtPayload | null => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
         return decoded;
     } catch (error) {
-        console.error('Error decoding token:', error);
         return null;
     }
 };
@@ -30,7 +27,6 @@ export const getAllProjects = async (req: Request, res: Response) => {
         const projects = await projectService.getAllProjects();
         res.status(200).json(projects);
     } catch (error) {
-        console.error(error);
         res.status(500).json({
             error: 'Something went wrong!'
         });
@@ -41,7 +37,6 @@ export const saveProjects = async (req: Request, res: Response) => {
     try {
         const newProject = req.body;
 
-        // Validate project data
         const validationError = projectService.validateProjects(newProject);
         if (validationError) {
             res.status(400).json({
@@ -50,7 +45,6 @@ export const saveProjects = async (req: Request, res: Response) => {
             return;
         }
 
-        // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(newProject.uploadedUserEmail)) {
             res.status(400).json({
@@ -59,29 +53,17 @@ export const saveProjects = async (req: Request, res: Response) => {
             return;
         }
 
-        // Save project using your existing service
         const savedProject = await projectService.saveProjects(newProject);
 
-        // Get user info from JWT token for personalized email
         const userInfo = getUserFromToken(req);
         const userName = userInfo?.username || newProject.author;
 
-        // Send email notification asynchronously (don't wait for it to complete)
         EmailService.sendProjectUploadSuccessEmail(
             newProject.uploadedUserEmail,
             savedProject,
             userName
-        ).then((emailSent) => {
-            if (emailSent) {
-                console.log(`✅ Upload success email sent to: ${newProject.uploadedUserEmail}`);
-            } else {
-                console.log(`❌ Failed to send upload success email to: ${newProject.uploadedUserEmail}`);
-            }
-        }).catch((error) => {
-            console.error('Email sending error:', error);
-        });
+        )
 
-        // Respond immediately with success
         res.status(201).json({
             success: true,
             message: 'Project uploaded successfully! Confirmation email sent.',
@@ -89,9 +71,8 @@ export const saveProjects = async (req: Request, res: Response) => {
         });
 
     } catch (error) {
-        console.error(error);
 
-        // Handle duplicate key errors
+
         if (error instanceof Error && 'code' in error && (error as any).code === 11000) {
             res.status(409).json({
                 error: 'Project with this ID already exists'
@@ -109,7 +90,6 @@ export const getProjectByCategory = async (req: Request, res: Response) => {
     try {
         const category = req.params.category;
 
-        // Validation
         if (!category || category.trim() === '') {
             return res.status(400).json({
                 error: 'Category name is required'
@@ -118,7 +98,6 @@ export const getProjectByCategory = async (req: Request, res: Response) => {
 
         const projectDto = await projectService.getProjectByCategory(category);
 
-        // Empty array check (length === 0)
         if (!projectDto || projectDto.length === 0) {
             return res.status(404).json({
                 error: 'Projects are not found for this category!',
@@ -129,7 +108,6 @@ export const getProjectByCategory = async (req: Request, res: Response) => {
         return res.status(200).json(projectDto);
 
     } catch (error) {
-        console.error('Error in getProjects controller:', error);
         return res.status(500).json({
             error: 'Internal server error',
         });
@@ -153,8 +131,6 @@ export const getProjectsByEmail = async (req: Request, res: Response) => {
     try {
         const userEmail = req.params.uploadedUserEmail;
 
-        console.log('Fetching projects for email:', userEmail);
-
         const projects = await projectService.getProjectsByUserEmail(userEmail);
 
         if (!projects || projects.length === 0) {
@@ -173,7 +149,6 @@ export const getProjectsByEmail = async (req: Request, res: Response) => {
             count: projects.length
         });
     } catch (error) {
-        console.error('Error fetching projects by email:', error);
         res.status(500).json({
             success: false,
             error: 'Failed to fetch projects'
@@ -194,26 +169,15 @@ export const updateProjects = async (req: Request, res: Response) => {
             return;
         }
 
-        // Get user info for personalized email
         const userInfo = getUserFromToken(req);
         const userName = userInfo?.username || updatedProject.author;
 
-        // Send update notification email asynchronously
         if (updatedProject.uploadedUserEmail) {
             EmailService.sendProjectUpdateEmail(
                 updatedProject.uploadedUserEmail,
                 updatedProject,
                 userName
-            ).then((emailSent) => {
-                if (emailSent) {
-                    console.log(`✅ Update notification email sent to: ${updatedProject.uploadedUserEmail}`);
-                } else {
-                    console.log(`❌ Failed to send update notification email to: ${updatedProject.uploadedUserEmail}`);
-                }
-            }).catch((error) => {
-                console.error('Update email sending error:', error);
-            });
-        }
+            )
 
         res.status(200).json({
             success: true,
@@ -221,8 +185,7 @@ export const updateProjects = async (req: Request, res: Response) => {
             project: updatedProject
         });
 
-    } catch (error) {
-        console.error('Error updating project:', error);
+    } } catch (error) {
         res.status(500).json({
             error: 'Something went wrong!'
         });
@@ -244,7 +207,6 @@ export const deleteProjects = async (req: Request, res: Response) => {
     })
 }
 
-// Test email endpoint (for development/testing)
 export const testEmail = async (req: Request, res: Response): Promise<void> => {
     try {
         const { email } = req.body;
@@ -272,7 +234,6 @@ export const testEmail = async (req: Request, res: Response): Promise<void> => {
         }
 
     } catch (error) {
-        console.error('Error sending test email:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to send test email',

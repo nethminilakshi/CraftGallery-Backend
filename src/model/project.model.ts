@@ -7,7 +7,7 @@ const projectModel = new mongoose.Schema(
             unique: true,
             index: true,
             default: function() {
-                // Generate custom user ID: USER_ + timestamp + random
+
                 const timestamp = Date.now().toString();
                 const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
                 return `PROJECT_${timestamp}_${random}`;
@@ -23,11 +23,11 @@ const projectModel = new mongoose.Schema(
         },
         "materials": {
             required: true,
-            type: [String]   // <-- ARRAY OF STRINGS
+            type: [String]
         },
         "steps": {
             required: true,
-            type: [String]   // <-- ARRAY OF STRINGS
+            type: [String]
         },
         "imageUrl": {
             required: true,

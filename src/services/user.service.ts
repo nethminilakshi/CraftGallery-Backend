@@ -6,10 +6,6 @@ export const getAllUsers = (): Promise<any> => {
     return User.find();
 }
 
-// export const saveUsers = async (user: UserDto): Promise<any> => {
-//     return User.create(user);
-// }
-
 import bcrypt from 'bcryptjs';
 
 export const saveUser = async (user: UserDto): Promise<UserDto> => {

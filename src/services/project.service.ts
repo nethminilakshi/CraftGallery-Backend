@@ -11,15 +11,14 @@ export const saveProjects = async (project: ProjectDto): Promise<any> => {
 
 export const getProjectByCategory = async (category: string): Promise<ProjectDto[]> => {
     try {
-        // Mongoose syntax - find() with regex for partial search
         const projects = await Project.find({
             category: {
                 $regex: category,
-                $options: 'i' // Case insensitive search
+                $options: 'i'
             }
         })
-            .sort({ category: 1 }) // Ascending order
-            .lean(); // Performance optimization
+            .sort({ category: 1 })
+            .lean();
 
         return projects as ProjectDto[];
 
@@ -31,7 +30,6 @@ export const getProjectByCategory = async (category: string): Promise<ProjectDto
 
 export const getProjectById = async (id: string): Promise<ProjectDto | null> => {
     try {
-        // Mongoose syntax - findOne() with id
         const project = await Project.findOne({ id: id }).lean();
         return project as ProjectDto | null;
     } catch (error) {
@@ -41,7 +39,6 @@ export const getProjectById = async (id: string): Promise<ProjectDto | null> => 
 
 export const getProjectsByUserEmail = async (email: string): Promise<ProjectDto[]> => {
     try {
-        // Use find() instead of findOne() to get ALL projects by this user
         const projects = await Project.find({ uploadedUserEmail: email }).lean();
         return projects as ProjectDto[];
     } catch (error) {

@@ -1,38 +1,16 @@
 import {Request, Response} from "express";
 import * as userService from '../services/user.service';
-import * as projectService from "../services/project.service";
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
         const users = await userService.getAllUsers();
         res.status(200).json(users);
     } catch (error) {
-        console.error(error);
         res.status(500).json({
             error: 'Something went wrong!'
         });
     }
 }
-
-// export const saveUser = async (req: Request, res: Response) => {
-//     try {
-//         const newUser = req.body;
-//         const validationError = userService.validateUser(newUser);
-//         if (validationError) {
-//             res.status(400).json({
-//                 error: validationError
-//             });
-//             return;
-//         }
-//         const savedUser = await userService.saveUsers(newUser);
-//         res.status(201).json(savedUser);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({
-//             error: 'Something went wrong!'
-//         });
-//     }
-// }
 
 export const saveUser = async (req: Request, res: Response) => {
 
@@ -47,10 +25,8 @@ export const saveUser = async (req: Request, res: Response) => {
         }
         const savedUser = await userService.saveUser(newUser)
         res.status(201).json(savedUser)
-        console.log(savedUser.id)
 
     } catch (error) {
-        console.error(error)
         res.status(500).json({
             error: 'Something went wrong'
         })
@@ -61,12 +37,7 @@ export const saveUser = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
     const userId = (req.params.id);
-    // if (isNaN(projectId)) {
-    //     res.status(400).json({
-    //         error: 'Invalid Project Id'
-    //     });
-    //     return;
-    // }
+
     const updatedUser = await userService.updateUsers(userId, req.body);
     if (!updatedUser) {
         res.status(404).json({
@@ -79,12 +50,6 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const getUser = async (req: Request, res: Response) => {
     const userId = (req.params.id);
-    // if (isNaN(projectId)) {
-    //     res.status(400).json({
-    //         error: 'Invalid Project Id'
-    //     });
-    //     return;
-    // }
     const user = await userService.getUserById(userId);
     if (!user) {
         res.status(404).json({
@@ -95,12 +60,7 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
     const userId = (req.params.id);
-    // if (isNaN(projectId)) {
-    //     res.status(400).json({
-    //         error: 'Invalid Project Id'
-    //     });
-    //     return;
-    // }
+
     const deletionResult = await userService.deleteUser(userId);
     if (!deletionResult) {
         res.status(404).json({

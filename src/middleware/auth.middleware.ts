@@ -7,7 +7,7 @@ export const authenticateToken = (req : Request , res: Response , next: NextFunc
 
     const authHeader = req.headers['authorization'];
     const  token = authHeader && authHeader.split(' ')[1];
-    console.log("Received token:", token);
+
     if(!token){
         res.status(401).json({
             error : 'Auth token is not present in' + 'request headers!'
@@ -16,14 +16,12 @@ export const authenticateToken = (req : Request , res: Response , next: NextFunc
     }
     jwt.verify(token , JWT_SECRET ,(error,user)=> {
         if (error) {
-            console.log("JWT verification failed:", error);
             res.status(402).json({
                 error: 'Invalid or expired auth token' + 'provided'
             })
             return
         }
 
-        console.log("Decoded user:", user);
         (req as Request & {user? : any}).user = user;
         next();
     }) }

@@ -7,7 +7,7 @@ const categoryModel = new mongoose.Schema(
             unique: true,
             index: true,
             default: function() {
-                // Generate custom user ID: USER_ + timestamp + random
+
                 const timestamp = Date.now().toString();
                 const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
                 return `CATEGORY_${timestamp}_${random}`;

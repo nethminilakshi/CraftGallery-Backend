@@ -10,7 +10,6 @@ import {authenticateToken, authorizeRole} from "../middleware/auth.middleware";
 
 const categoryRouter: Router = Router()
 
-// Handle requests
 categoryRouter.get("/all", getAllCategories);
 categoryRouter.post("/save", authenticateToken,authorizeRole('ADMIN'),saveCategories)
 categoryRouter.get("/:id",getCategory )

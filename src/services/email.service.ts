@@ -1,7 +1,5 @@
-// services/emailService.ts
 import sgMail from '@sendgrid/mail';
 
-// Using your existing ProjectDto interface
 export interface ProjectDto {
     id: string;
     category: string;
@@ -15,7 +13,6 @@ export interface ProjectDto {
     uploadedUserEmail: string;
 }
 
-// Initialize SendGrid with API key
 sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
 interface EmailTemplate {
@@ -30,9 +27,7 @@ export class EmailService {
     private static readonly FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@yourapp.com';
     private static readonly APP_NAME = process.env.APP_NAME || 'Creative Projects Hub';
 
-    /**
-     * Send project upload success email
-     */
+
     static async sendProjectUploadSuccessEmail(
         userEmail: string,
         project: ProjectDto,
@@ -46,17 +41,13 @@ export class EmailService {
             );
 
             await sgMail.send(emailTemplate);
-            console.log(`Project upload success email sent to: ${userEmail}`);
             return true;
         } catch (error) {
-            console.error('Error sending project upload email:', error);
             return false;
         }
     }
 
-    /**
-     * Generate HTML template for project upload success
-     */
+
     private static generateProjectUploadTemplate(
         userEmail: string,
         project: ProjectDto,
@@ -290,9 +281,7 @@ export class EmailService {
         };
     }
 
-    /**
-     * Send project update notification email
-     */
+
     static async sendProjectUpdateEmail(
         userEmail: string,
         project: ProjectDto,
@@ -324,17 +313,12 @@ export class EmailService {
             };
 
             await sgMail.send(emailTemplate);
-            console.log(`Project update email sent to: ${userEmail}`);
             return true;
         } catch (error) {
-            console.error('Error sending project update email:', error);
             return false;
         }
     }
 
-    /**
-     * Test email functionality
-     */
     static async sendTestEmail(userEmail: string): Promise<boolean> {
         try {
             const emailTemplate: EmailTemplate = {
@@ -349,10 +333,8 @@ export class EmailService {
             };
 
             await sgMail.send(emailTemplate);
-            console.log(`Test email sent successfully to: ${userEmail}`);
             return true;
         } catch (error) {
-            console.error('Error sending test email:', error);
             return false;
         }
     }

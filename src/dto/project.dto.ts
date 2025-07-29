@@ -3,10 +3,10 @@ export interface ProjectDto {
     category: string;
     description: string;
     title: string;
-    materials: string[]; // Changed from string to string[]
-    steps: string[];     // Changed from string to string[] if it was string before
-    imageUrl: string;    // Note: This is imageUrl, not image
-    createdAt: Date | string; // Allow both Date and string
+    materials: string[];
+    steps: string[];
+    imageUrl: string;
+    createdAt: Date | string;
     author: string;
     uploadedUserEmail: string;
 }
