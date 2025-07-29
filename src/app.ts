@@ -21,7 +21,7 @@ const corsOptions = {
         }
     }
 }
-app.use(cors());
+app.use(cors(corsOptions));
 app.use("/api/category", categoryRoutes);
 app.use("/api/project",projectRoutes);
 app.use("/api/user", userRoutes);

@@ -39,6 +39,16 @@ export const getProjectById = async (id: string): Promise<ProjectDto | null> => 
     }
 }
 
+export const getProjectsByUserEmail = async (email: string): Promise<ProjectDto[]> => {
+    try {
+        // Use find() instead of findOne() to get ALL projects by this user
+        const projects = await Project.find({ uploadedUserEmail: email }).lean();
+        return projects as ProjectDto[];
+    } catch (error) {
+        throw new Error('Failed to fetch projects');
+    }
+}
+
 export const updateProjects = async (id: string, data: ProjectDto) => {
     const project = await Project.findOneAndUpdate({id: id}, data, {new: true});
     if ((!project)) {
